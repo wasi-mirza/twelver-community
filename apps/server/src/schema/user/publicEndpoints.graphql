@@ -1,0 +1,17 @@
+
+# ------------------------
+# User Queries
+# ------------------------
+
+type Query {
+  userExistsByEmail(email: String!): Boolean!
+  userExistsByFirebaseId(firebaseId: String!): Boolean!
+}
+
+# ------------------------
+# User Mutations
+# ------------------------
+
+type Mutation {
+  createUser(input: CreateUserInput!): User!
+}

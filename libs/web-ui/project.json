@@ -1,0 +1,19 @@
+{
+  "name": "web-ui",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/web-ui/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/web-ui",
+        "main": "libs/web-ui/src/index.ts",
+        "tsConfig": "libs/web-ui/tsconfig.lib.json",
+        "assets": ["libs/web-ui/*.md"]
+      }
+    }
+  }
+}

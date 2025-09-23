@@ -1,0 +1,16 @@
+{
+  "name": "gql",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/gql/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["cd libs/gql/ && npx graphql-code-generator"]
+      },
+      "parallelism": false
+    }
+  }
+}

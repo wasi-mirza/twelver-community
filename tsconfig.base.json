@@ -1,0 +1,28 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@my-project/apollo": ["libs/apollo/src/index.ts"],
+      "@my-project/auth": ["libs/auth/src/index.ts"],
+      "@my-project/common-libs": ["libs/common-libs/src/index.ts"],
+      "@my-project/gql": ["libs/gql/src/index.ts"],
+      "@my-project/libs": ["libs/src/index.ts"],
+      "@my-project/mobile-ui": ["libs/mobile-ui/src/index.ts"],
+      "@my-project/web-ui": ["libs/web-ui/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

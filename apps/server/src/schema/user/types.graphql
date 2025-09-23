@@ -1,0 +1,42 @@
+scalar DateTime
+
+# ------------------------
+# User Response Types
+# ------------------------
+
+type User {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  firebaseId: String!
+
+  createdBy: String
+  updatedBy: String
+  deletedBy: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+}
+
+# ------------------------
+# User Input Types
+# ------------------------
+
+input CreateUserInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  firebaseId: String!
+}
+
+input UpdateUserInput {
+  firstName: String
+  lastName: String
+  firebaseId: String
+}
+
+type MutationResponse {
+  status: Boolean!
+  message: String!
+}
