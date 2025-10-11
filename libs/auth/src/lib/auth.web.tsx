@@ -8,7 +8,7 @@ import {
 } from '@my-project/gql';
 
 type UserWithProfile = DatabaseUser & {
-  profile?: Partial<Profile> | null;
+  profile?: Profile | null;
   role: Role;
 };
 
@@ -44,7 +44,6 @@ const AuthProviderWeb = (props: React.PropsWithChildren<object>) => {
       setLoading(false);
     },
   });
-  console.log('databaseUser in auth.web.tsx', databaseUser);
 
   // 3. Listen to Firebase Auth State
   useEffect(() => {

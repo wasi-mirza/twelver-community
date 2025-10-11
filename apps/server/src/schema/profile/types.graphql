@@ -1,4 +1,11 @@
 scalar JSONObject
+
+enum EnterpriseApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 type Profile {
   id: ID!
   user: User!
@@ -9,6 +16,7 @@ type Profile {
   state: String
   postalCode: String
   isEnterprise: Boolean!
+  enterpriseApplicationStatus: EnterpriseApplicationStatus
   tradeType: String
   companyName: String
   businessLicenseUrl: String

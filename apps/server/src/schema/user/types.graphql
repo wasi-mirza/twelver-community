@@ -3,7 +3,6 @@ scalar DateTime
 enum Role {
   USER
   ENTERPRISE
-  PENDING_ENTERPRISE
   ADMIN
   MODERATOR
 }

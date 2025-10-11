@@ -41,9 +41,14 @@ model User {
 enum Role {
   USER // individual / customer by default
   ENTERPRISE // approved enterprise
-  PENDING_ENTERPRISE // if user has requested to become enterprise but not approved
   ADMIN
   MODERATOR
+}
+
+enum EnterpriseApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 // This table captures the extra profile data (for enterprise or individual)
@@ -61,6 +66,7 @@ model Profile {
 
   // Enterprise-specific fields
   isEnterprise       Boolean @default(false)
+  enterpriseApplicationStatus EnterpriseApplicationStatus?
   tradeType          String? // e.g. "plumber", "electrician", etc
   companyName        String?
   businessLicenseUrl String? // optional document

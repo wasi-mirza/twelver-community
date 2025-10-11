@@ -10,6 +10,7 @@ mutation createProfile($input: CreateProfileInput!) {
     }
     profile {
       id
+      enterpriseApplicationStatus
     }
   }
 }
@@ -23,6 +24,7 @@ mutation updateProfile($input: UpdateProfileInput!) {
     state
     postalCode
     isEnterprise
+    enterpriseApplicationStatus
     tradeType
     companyName
     businessLicenseUrl
@@ -44,6 +46,7 @@ query getProfileByUserId($userId: String!) {
     state
     postalCode
     isEnterprise
+    enterpriseApplicationStatus
     tradeType
     companyName
     businessLicenseUrl
@@ -61,6 +64,7 @@ query myProfile {
     state
     postalCode
     isEnterprise
+    enterpriseApplicationStatus
     tradeType
     companyName
     businessLicenseUrl

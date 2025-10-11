@@ -55,7 +55,18 @@ query getUserByFirebaseId($firebaseId: String!) {
     role
     profile {
       id
+      phone
+      address
+      city
+      state
+      postalCode
+      isEnterprise
+      enterpriseApplicationStatus
+      tradeType
       companyName
+      businessLicenseUrl
+      description
+      otherDetails
     }
   }
 }
@@ -73,7 +84,18 @@ query getUserByEmail($email: String!) {
     role
     profile {
       id
+      phone
+      address
+      city
+      state
+      postalCode
+      isEnterprise
+      enterpriseApplicationStatus
+      tradeType
       companyName
+      businessLicenseUrl
+      description
+      otherDetails
     }
   }
 }

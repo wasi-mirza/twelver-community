@@ -23,9 +23,6 @@ export async function upsertUserByEmail(data: CreateUserInput): Promise<User> {
       firebaseId: data.firebaseId,
     },
     create: data,
-    include: {
-      profile: true,
-    },
   });
 }
 
@@ -38,7 +35,11 @@ export async function ensureUserFromFirebase(decoded: {
     throw new Error('Missing required fields from Firebase token (email/uid)');
   }
   const { firstName, lastName } = splitName(decoded.name);
-  return upsertUserByEmail({
+  const user = await getUserByEmail(decoded.email);
+  if (user) {
+    return user;
+  }
+  return createUser({
     email: decoded.email,
     firebaseId: decoded.uid,
     firstName,

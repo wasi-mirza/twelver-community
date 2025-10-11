@@ -33,14 +33,12 @@ const initFirebaseAmplify = (config: FirebaseConfig) => {
     // Check if a Firebase app has already been initialized.
     const app = getApp();
     const auth = getAuth(app);
-    console.log('Auth Initialized Successfully', auth);
 
     return { app, auth };
   } catch (error) {
     // If the app is not initialized, initialize it.
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    console.log('Auth Initialized Successfully', auth);
 
     return { app, auth };
   }

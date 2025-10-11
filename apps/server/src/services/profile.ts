@@ -24,16 +24,17 @@ export async function createProfile(
     return prisma.$transaction(async (tx) => {
       const profile = await tx.profile.upsert({
         where: { userId },
-        update: data,
+        update: { ...data, enterpriseApplicationStatus: 'PENDING' },
         create: {
           ...data,
+          enterpriseApplicationStatus: 'PENDING',
           user: { connect: { id: userId } },
         },
       });
 
       const user = await tx.user.update({
         where: { id: userId },
-        data: { role: 'PENDING_ENTERPRISE' },
+        data: { role: 'USER' },
       });
 
       return { user, profile };

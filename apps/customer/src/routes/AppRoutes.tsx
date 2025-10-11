@@ -30,15 +30,19 @@ const AppRoutes: React.FC = () => {
     );
   }
 
-  // If the user's role is PENDING_ENTERPRISE, but the profile hasn't loaded,
+  // If the user's enterprise application status is PENDING, but the profile hasn't loaded,
   // we can't determine the next step, so we show a loading indicator.
-  if (databaseUser?.role === 'PENDING_ENTERPRISE' && !databaseUser.profile) {
+  if (
+    databaseUser?.profile?.enterpriseApplicationStatus === 'PENDING' &&
+    !databaseUser.profile
+  ) {
     return <div>Loading...</div>;
   }
 
   // User has selected enterprise, but not completed registration
   if (
-    databaseUser?.role === 'PENDING_ENTERPRISE' &&
+    databaseUser?.role === 'USER' &&
+    databaseUser?.profile?.enterpriseApplicationStatus === 'PENDING' &&
     !databaseUser.profile?.companyName
   ) {
     return (
@@ -56,7 +60,7 @@ const AppRoutes: React.FC = () => {
   }
 
   // User has registered as enterprise and is awaiting approval
-  if (databaseUser?.role === 'PENDING_ENTERPRISE') {
+  if (databaseUser?.profile?.enterpriseApplicationStatus === 'PENDING') {
     return (
       <Routes>
         <Route path="/pending-approval" element={<PendingApprovalPage />} />
