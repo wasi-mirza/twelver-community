@@ -18,7 +18,6 @@ initFirebaseAmplify({
 // Initialize Apollo Client
 const apolloClient = client({
   VITE_CONFIG_APP_URL: import.meta.env.VITE_CONFIG_APP_URL || 'http://localhost:3333/graphql',
-  VITE_CONFIG_APP_SERVERLESS_URL: import.meta.env.VITE_CONFIG_APP_SERVERLESS_URL || 'http://localhost:3333/graphql',
   VITE_CONFIG_APP_PUBLIC_API_URL: import.meta.env.VITE_CONFIG_APP_PUBLIC_API_URL || 'http://localhost:3333/public/graphql',
 });
 

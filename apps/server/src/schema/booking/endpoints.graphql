@@ -1,0 +1,10 @@
+extend type Query {
+  getBookingsAsCustomer: [Booking!]
+  getBookingsAsEnterprise: [Booking!]
+  getBookingById(id: ID!): Booking
+}
+
+extend type Mutation {
+  createBooking(input: CreateBookingInput!): Booking
+  updateBookingStatus(input: UpdateBookingStatusInput!): Booking
+}

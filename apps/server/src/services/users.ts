@@ -1,5 +1,5 @@
 import { CreateUserInput } from '@my-project/gql';
-import { PrismaClient, User } from '@prisma/client';
+import { PrismaClient, User, Role } from '@prisma/client';
 import { splitName } from '@my-project/common-libs';
 
 const prisma = new PrismaClient();
@@ -23,6 +23,9 @@ export async function upsertUserByEmail(data: CreateUserInput): Promise<User> {
       firebaseId: data.firebaseId,
     },
     create: data,
+    include: {
+      profile: true,
+    },
   });
 }
 
@@ -48,12 +51,25 @@ export async function getUserByEmail(email: string): Promise<User | null> {
 }
 
 export async function getUserByFirebaseId(firebaseId: string): Promise<User | null> {
-  return prisma.user.findUnique({ where: { firebaseId } });
+  return prisma.user.findUnique({
+    where: { firebaseId },
+    include: {
+      profile: true,
+    },
+  });
+}
+
+export async function getUsers(): Promise<User[]> {
+  return prisma.user.findMany();
 }
 
 export async function updateUser(input: UpdateUserInput): Promise<User> {
   const { id, ...data } = input;
   return prisma.user.update({ where: { id }, data });
+}
+
+export async function updateUserRole(id: string, role: Role): Promise<User> {
+  return prisma.user.update({ where: { id }, data: { role } });
 }
 
 export async function deleteUser(id: string): Promise<User> {

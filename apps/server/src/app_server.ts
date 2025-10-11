@@ -6,7 +6,11 @@ import { createServer } from 'http';
 import { graphqlRouter, publicGraphqlRouter } from './routes';
 import { verifyFirebaseToken } from './services/firebase';
 import { Request, Response } from 'express';
+import { User } from '@prisma/client';
 
+export interface AppContext {
+  user?: User;
+}
 
 const app = express();
 

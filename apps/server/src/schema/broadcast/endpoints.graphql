@@ -1,0 +1,10 @@
+extend type Query {
+  getBroadcasts(city: String, state: String, tags: [String!]): [Broadcast!]
+  getBroadcastById(id: ID!): Broadcast
+}
+
+extend type Mutation {
+  createBroadcast(input: CreateBroadcastInput!): Broadcast
+  updateBroadcast(input: UpdateBroadcastInput!): Broadcast
+  deleteBroadcast(id: ID!): Broadcast
+}

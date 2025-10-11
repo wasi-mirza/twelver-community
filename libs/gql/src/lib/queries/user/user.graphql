@@ -9,9 +9,14 @@ mutation createUser($input: CreateUserInput!) {
     lastName
     email
     firebaseId
+    role
     createdAt
     updatedAt
     deletedAt
+    profile {
+      id
+      companyName
+    }
   }
 }
 
@@ -47,6 +52,11 @@ query getUserByFirebaseId($firebaseId: String!) {
     firstName
     lastName
     email
+    role
+    profile {
+      id
+      companyName
+    }
   }
 }
 
@@ -60,6 +70,11 @@ query getUserByEmail($email: String!) {
     firstName
     lastName
     email
+    role
+    profile {
+      id
+      companyName
+    }
   }
 }
 

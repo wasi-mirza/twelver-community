@@ -1,0 +1,19 @@
+type Review {
+  id: ID!
+  customer: User!
+  customerId: String!
+  enterprise: User!
+  enterpriseId: String!
+  rating: Int!
+  comment: String
+  createdAt: DateTime!
+  createdBy: String
+  updatedBy: String
+  deletedBy: String
+}
+
+input CreateReviewInput {
+  enterpriseId: String!
+  rating: Int!
+  comment: String
+}

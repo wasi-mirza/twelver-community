@@ -1,0 +1,34 @@
+type Broadcast {
+  id: ID!
+  author: User!
+  authorId: String!
+  title: String!
+  message: String!
+  tags: [String!]
+  createdAt: DateTime!
+  expiresAt: DateTime
+  city: String
+  state: String
+  isActive: Boolean!
+  deletedAt: DateTime
+}
+
+input CreateBroadcastInput {
+  title: String!
+  message: String!
+  tags: [String!]
+  expiresAt: DateTime
+  city: String
+  state: String
+}
+
+input UpdateBroadcastInput {
+  id: ID!
+  title: String
+  message: String
+  tags: [String!]
+  expiresAt: DateTime
+  city: String
+  state: String
+  isActive: Boolean
+}

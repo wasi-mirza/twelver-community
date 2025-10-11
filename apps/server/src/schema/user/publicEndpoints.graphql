@@ -12,6 +12,6 @@ type Query {
 # User Mutations
 # ------------------------
 
-type Mutation {
-  createUser(input: CreateUserInput!): User!
+extend type Mutation {
+  createUser(input: CreateUserInput!): User
 }

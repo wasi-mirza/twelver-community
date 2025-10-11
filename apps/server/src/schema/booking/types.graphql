@@ -1,0 +1,37 @@
+type Booking {
+  id: ID!
+  customer: User!
+  customerId: String!
+  enterprise: User!
+  enterpriseId: String!
+  status: BookingStatus!
+  scheduledAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  canceledAt: DateTime
+  remarks: String
+  createdBy: String
+  updatedBy: String
+  deletedBy: String
+  deletedAt: DateTime
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  REJECTED
+}
+
+input CreateBookingInput {
+  enterpriseId: String!
+  scheduledAt: DateTime!
+  remarks: String
+}
+
+input UpdateBookingStatusInput {
+  id: ID!
+  status: BookingStatus!
+  remarks: String
+}

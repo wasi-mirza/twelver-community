@@ -1,8 +1,13 @@
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { useCallback } from 'react';
 import { useAuthProviderWeb } from '../lib/auth.web';
-import { useCreateUserMutation } from '@my-project/gql';
+import { useCreateUserMutation, User as DatabaseUser, Profile, Role } from '@my-project/gql';
 import { splitName } from '@my-project/common-libs';
+
+type UserWithProfile = DatabaseUser & {
+  profile?: Partial<Profile> | null;
+  role: Role;
+};
 
 // This custom React hook provides Google Sign-In and Sign-Out functionality for a web app using Firebase Authentication.
 const useWebGoogleSignIn = () => {
@@ -12,6 +17,9 @@ const useWebGoogleSignIn = () => {
   const googleSignIn = useCallback(async () => {
     const auth = getAuth(); //Get the current auth instance
     const provider = new GoogleAuthProvider(); //Provider for Google login.
+    provider.setCustomParameters({
+      prompt: 'select_account',
+    });
     try {
       const credential = await signInWithPopup(auth, provider); //Trigger Google sign-in via a popup
       console.log('credential', credential);
@@ -28,11 +36,11 @@ const useWebGoogleSignIn = () => {
         
         const result = await createUserMutation({
           variables: {
-            input: userData
+            input: userData,
           },
           context: {
-            clientName: 'public'
-          }
+            clientName: 'public',
+          },
         });
         
         const databaseUser = result.data?.createUser;
@@ -40,7 +48,7 @@ const useWebGoogleSignIn = () => {
         
         // Store database user in auth context
         if (databaseUser) {
-          setDatabaseUser(databaseUser);
+          setDatabaseUser(databaseUser as UserWithProfile);
         }
       } catch (syncError) {
         console.error('Failed to sync user with database:', syncError);

@@ -1,14 +1,24 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { getAuth, onAuthStateChanged, signOut, User as FirebaseUserWeb } from 'firebase/auth';
-import { User as DatabaseUser } from '@my-project/gql';
+import {
+  Profile,
+  Role,
+  User as DatabaseUser,
+  useGetUserByFirebaseIdLazyQuery,
+} from '@my-project/gql';
+
+type UserWithProfile = DatabaseUser & {
+  profile?: Partial<Profile> | null;
+  role: Role;
+};
 
 type WebAuthContextType = {
   user: FirebaseUserWeb | null;
-  databaseUser: DatabaseUser | null;
+  databaseUser: UserWithProfile | null;
   loading: boolean;
   logoutUser: () => Promise<void>;
   doNoting: () => Promise<void>;
-  setDatabaseUser: (user: DatabaseUser | null) => void;
+  setDatabaseUser: (user: UserWithProfile | null) => void;
 };
 
 // 1. Context Creation
@@ -19,8 +29,22 @@ const WebAuthContext = createContext<WebAuthContextType>({} as WebAuthContextTyp
 // Role: Provides authentication context to all child components.
 const AuthProviderWeb = (props: React.PropsWithChildren<object>) => {
   const [user, setUser] = useState<FirebaseUserWeb | null>(null);
-  const [databaseUser, setDatabaseUser] = useState<DatabaseUser | null>(null);
+  const [databaseUser, setDatabaseUser] = useState<UserWithProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [getUserByFirebaseId] = useGetUserByFirebaseIdLazyQuery({
+    fetchPolicy: 'network-only',
+    onCompleted: (data) => {
+      if (data.getUserByFirebaseId) {
+        setDatabaseUser(data.getUserByFirebaseId as UserWithProfile);
+      }
+      setLoading(false);
+    },
+    onError: () => {
+      setDatabaseUser(null);
+      setLoading(false);
+    },
+  });
+  console.log('databaseUser in auth.web.tsx', databaseUser);
 
   // 3. Listen to Firebase Auth State
   useEffect(() => {
@@ -32,11 +56,13 @@ const AuthProviderWeb = (props: React.PropsWithChildren<object>) => {
       // Clear database user when Firebase user logs out
       if (!firebaseUser) {
         setDatabaseUser(null);
+        setLoading(false);
+      } else {
+        getUserByFirebaseId({ variables: { firebaseId: firebaseUser.uid } });
       }
-      setLoading(false);
     });
     return () => unsubscribe();
-  }, []);
+  }, [getUserByFirebaseId]);
 
   // 4. Logout Function
   // Handles Firebase sign-out.

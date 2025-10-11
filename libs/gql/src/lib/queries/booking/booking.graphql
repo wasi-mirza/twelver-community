@@ -1,0 +1,66 @@
+# ------------------------
+# Booking Mutations
+# ------------------------
+
+mutation createBooking($input: CreateBookingInput!) {
+  createBooking(input: $input) {
+    id
+  }
+}
+
+mutation updateBookingStatus($input: UpdateBookingStatusInput!) {
+  updateBookingStatus(input: $input) {
+    id
+  }
+}
+
+# ------------------------
+# Booking Queries
+# ------------------------
+
+query getBookingsAsCustomer {
+  getBookingsAsCustomer {
+    id
+    status
+    scheduledAt
+    remarks
+    enterprise {
+      id
+      firstName
+      lastName
+    }
+  }
+}
+
+query getBookingsAsEnterprise {
+  getBookingsAsEnterprise {
+    id
+    status
+    scheduledAt
+    remarks
+    customer {
+      id
+      firstName
+      lastName
+    }
+  }
+}
+
+query getBookingById($id: ID!) {
+  getBookingById(id: $id) {
+    id
+    status
+    scheduledAt
+    remarks
+    customer {
+      id
+      firstName
+      lastName
+    }
+    enterprise {
+      id
+      firstName
+      lastName
+    }
+  }
+}

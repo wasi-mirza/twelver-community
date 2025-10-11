@@ -1,38 +1,49 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
-interface Props {
+// Define the shape of the Firebase configuration object
+type FirebaseConfig = {
   FIREBASE_API_KEY: string;
   FIREBASE_AUTH_DOMAIN: string;
   FIREBASE_PROJECT_ID: string;
   FIREBASE_STORAGE_BUCKET: string;
   FIREBASE_MESSAGING_SENDER_ID: string;
   FIREBASE_APP_ID: string;
-}
+};
 
-const initFirebaseAmplify = ({
-  FIREBASE_API_KEY,
-  FIREBASE_AUTH_DOMAIN,
-  FIREBASE_PROJECT_ID,
-  FIREBASE_STORAGE_BUCKET,
-  FIREBASE_MESSAGING_SENDER_ID,
-  FIREBASE_APP_ID,
-}: Props) => {
+// This function initializes Firebase and Amplify for the application.
+const initFirebaseAmplify = (config: FirebaseConfig) => {
+  // Validate the Firebase configuration
+  for (const [key, value] of Object.entries(config)) {
+    if (!value) {
+      throw new Error(`Missing Firebase config value for ${key}`);
+    }
+  }
+
   const firebaseConfig = {
-    apiKey: FIREBASE_API_KEY,
-    authDomain: FIREBASE_AUTH_DOMAIN,
-    projectId: FIREBASE_PROJECT_ID,
-    storageBucket: FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
-    appId: FIREBASE_APP_ID,
+    apiKey: config.FIREBASE_API_KEY,
+    authDomain: config.FIREBASE_AUTH_DOMAIN,
+    projectId: config.FIREBASE_PROJECT_ID,
+    storageBucket: config.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: config.FIREBASE_MESSAGING_SENDER_ID,
+    appId: config.FIREBASE_APP_ID,
   };
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  console.log('Auth Initialized Successfully', auth);
+  try {
+    // Check if a Firebase app has already been initialized.
+    const app = getApp();
+    const auth = getAuth(app);
+    console.log('Auth Initialized Successfully', auth);
 
-  return { app, auth };
+    return { app, auth };
+  } catch (error) {
+    // If the app is not initialized, initialize it.
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    console.log('Auth Initialized Successfully', auth);
+
+    return { app, auth };
+  }
 };
 
 export { initFirebaseAmplify };

@@ -1,0 +1,26 @@
+# ------------------------
+# Review Mutations
+# ------------------------
+
+mutation createReview($input: CreateReviewInput!) {
+  createReview(input: $input) {
+    id
+  }
+}
+
+# ------------------------
+# Review Queries
+# ------------------------
+
+query getReviewsForEnterprise($enterpriseId: String!) {
+  getReviewsForEnterprise(enterpriseId: $enterpriseId) {
+    id
+    rating
+    comment
+    customer {
+      id
+      firstName
+      lastName
+    }
+  }
+}

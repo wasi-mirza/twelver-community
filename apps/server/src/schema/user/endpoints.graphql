@@ -1,11 +1,12 @@
-type Query {
-  # User Queries
+extend type Query {
+  getUsers: [User!]
+  me: User
   getUserByEmail(email: String!): User
   getUserByFirebaseId(firebaseId: String!): User
 }
 
-type Mutation {
-  # User Mutations
-  updateUser(input: UpdateUserInput!): User!
-  deleteUser(id: ID!): MutationResponse!
+extend type Mutation {
+  updateUserRole(id: ID!, role: Role!): User
+  updateUser(input: UpdateUserInput!): User
+  deleteUser(id: ID!): MutationResponse
 }

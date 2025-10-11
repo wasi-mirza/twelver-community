@@ -94,15 +94,27 @@ const wsLink = new GraphQLWsLink(
 
 interface props {
   VITE_CONFIG_APP_URL: string;
-  VITE_CONFIG_APP_SERVERLESS_URL: string;
   VITE_CONFIG_APP_PUBLIC_API_URL: string;
 }
 
 const client = ({
   VITE_CONFIG_APP_URL,
-  VITE_CONFIG_APP_SERVERLESS_URL,
   VITE_CONFIG_APP_PUBLIC_API_URL,
 }: props) => {
+  const httpLink = new HttpLink({
+    uri: VITE_CONFIG_APP_URL,
+  });
+
+  const publicHttpLink = new HttpLink({
+    uri: VITE_CONFIG_APP_PUBLIC_API_URL,
+  });
+
+  const splitLink = ApolloLink.split(
+    (operation) => operation.getContext()['clientName'] === 'public',
+    publicHttpLink,
+    httpLink
+  );
+
   return new ApolloClient({
     link: ApolloLink.from([
       loggingLink,
@@ -117,21 +129,7 @@ const client = ({
           );
         },
         wsLink,
-        ApolloLink.split(
-          (op) => isAppRequest(op),
-          new HttpLink({
-            uri: VITE_CONFIG_APP_URL,
-          }),
-          ApolloLink.split(
-            (op) => isServerlessRequest(op),
-            new HttpLink({
-              uri: VITE_CONFIG_APP_SERVERLESS_URL,
-            }),
-            new HttpLink({
-              uri: VITE_CONFIG_APP_PUBLIC_API_URL,
-            })
-          )
-        )
+        splitLink
       ),
     ]),
     cache: new InMemoryCache(),

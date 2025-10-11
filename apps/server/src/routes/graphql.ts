@@ -15,6 +15,7 @@ router.use(
     context: {
       prisma: prisma,
       request: req,
+      user: req.user,
     },
     customFormatErrorFn: (error) => {
       // Log GraphQL errors to Sentry

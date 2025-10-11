@@ -1,0 +1,49 @@
+scalar JSONObject
+type Profile {
+  id: ID!
+  user: User!
+  userId: String!
+  phone: String
+  address: String
+  city: String
+  state: String
+  postalCode: String
+  isEnterprise: Boolean!
+  tradeType: String
+  companyName: String
+  businessLicenseUrl: String
+  description: String
+  otherDetails: JSONObject
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+}
+
+input CreateProfileInput {
+  phone: String
+  address: String
+  city: String
+  state: String
+  postalCode: String
+  isEnterprise: Boolean
+  tradeType: String
+  companyName: String
+  businessLicenseUrl: String
+  description: String
+  otherDetails: JSONObject
+}
+
+input UpdateProfileInput {
+  id: ID!
+  phone: String
+  address: String
+  city: String
+  state: String
+  postalCode: String
+  isEnterprise: Boolean
+  tradeType: String
+  companyName: String
+  businessLicenseUrl: String
+  description: String
+  otherDetails: JSONObject
+}

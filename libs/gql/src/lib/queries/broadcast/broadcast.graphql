@@ -1,0 +1,61 @@
+# ------------------------
+# Broadcast Mutations
+# ------------------------
+
+mutation createBroadcast($input: CreateBroadcastInput!) {
+  createBroadcast(input: $input) {
+    id
+  }
+}
+
+mutation updateBroadcast($input: UpdateBroadcastInput!) {
+  updateBroadcast(input: $input) {
+    id
+  }
+}
+
+mutation deleteBroadcast($id: ID!) {
+  deleteBroadcast(id: $id) {
+    id
+  }
+}
+
+# ------------------------
+# Broadcast Queries
+# ------------------------
+
+query getBroadcasts($city: String, $state: String, $tags: [String!]) {
+  getBroadcasts(city: $city, state: $state, tags: $tags) {
+    id
+    title
+    message
+    tags
+    expiresAt
+    city
+    state
+    isActive
+    author {
+      id
+      firstName
+      lastName
+    }
+  }
+}
+
+query getBroadcastById($id: ID!) {
+  getBroadcastById(id: $id) {
+    id
+    title
+    message
+    tags
+    expiresAt
+    city
+    state
+    isActive
+    author {
+      id
+      firstName
+      lastName
+    }
+  }
+}

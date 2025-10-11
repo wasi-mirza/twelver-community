@@ -1,0 +1,14 @@
+extend type Query {
+  getProfileByUserId(userId: String!): Profile
+  myProfile: Profile
+}
+
+type CreateProfilePayload {
+  user: User!
+  profile: Profile!
+}
+
+extend type Mutation {
+  createProfile(input: CreateProfileInput!): CreateProfilePayload!
+  updateProfile(input: UpdateProfileInput!): Profile
+}

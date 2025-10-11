@@ -1,0 +1,70 @@
+# ------------------------
+# Profile Mutations
+# ------------------------
+
+mutation createProfile($input: CreateProfileInput!) {
+  createProfile(input: $input) {
+    user {
+      id
+      role
+    }
+    profile {
+      id
+    }
+  }
+}
+
+mutation updateProfile($input: UpdateProfileInput!) {
+  updateProfile(input: $input) {
+    id
+    phone
+    address
+    city
+    state
+    postalCode
+    isEnterprise
+    tradeType
+    companyName
+    businessLicenseUrl
+    description
+    otherDetails
+  }
+}
+
+# ------------------------
+# Profile Queries
+# ------------------------
+
+query getProfileByUserId($userId: String!) {
+  getProfileByUserId(userId: $userId) {
+    id
+    phone
+    address
+    city
+    state
+    postalCode
+    isEnterprise
+    tradeType
+    companyName
+    businessLicenseUrl
+    description
+    otherDetails
+  }
+}
+
+query myProfile {
+  myProfile {
+    id
+    phone
+    address
+    city
+    state
+    postalCode
+    isEnterprise
+    tradeType
+    companyName
+    businessLicenseUrl
+    description
+    otherDetails
+  }
+}

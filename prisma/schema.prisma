@@ -9,15 +9,155 @@ datasource db {
 
 model User {
   id         String @id @default(auto()) @map("_id") @db.ObjectId
+  firebaseId String @unique
+  email      String @unique
   firstName  String
   lastName   String
-  email      String @unique
-  firebaseId String @unique
+  role       Role   @default(USER)
 
+  // Profile relation: every user may have a profile (enterprise or individual)
+  profile Profile?
+
+  // Metadata
   createdBy String?
   updatedBy String?
   deletedBy String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
   deletedAt DateTime?
+
+  // Relations
+  broadcasts           Broadcast[] @relation("UserBroadcasts")
+  bookingsAsCustomer   Booking[]   @relation("CustomerBookings")
+  bookingsAsEnterprise Booking[]   @relation("EnterpriseBookings")
+  reviewsGiven         Review[]    @relation("ReviewsByCustomer")
+  reviewsReceived      Review[]    @relation("ReviewsOfEnterprise")
+
+  // Enterprise relations
+  relationsInitiated EnterpriseRelation[] @relation("EnterpriseRelationsFrom")
+  relationsReceived  EnterpriseRelation[] @relation("EnterpriseRelationsTo")
+}
+
+enum Role {
+  USER // individual / customer by default
+  ENTERPRISE // approved enterprise
+  PENDING_ENTERPRISE // if user has requested to become enterprise but not approved
+  ADMIN
+  MODERATOR
+}
+
+// This table captures the extra profile data (for enterprise or individual)
+model Profile {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique @db.ObjectId
+
+  // Common fields  
+  phone      String?
+  address    String?
+  city       String?
+  state      String?
+  postalCode String?
+
+  // Enterprise-specific fields
+  isEnterprise       Boolean @default(false)
+  tradeType          String? // e.g. "plumber", "electrician", etc
+  companyName        String?
+  businessLicenseUrl String? // optional document
+  description        String? // description of services
+  otherDetails       Json? // flexible JSON for extra fields, like operating hours, service zones etc
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+}
+
+// Broadcast messages (e.g. someone looking for help or announcing service)
+model Broadcast {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  author   User   @relation("UserBroadcasts", fields: [authorId], references: [id])
+  authorId String @db.ObjectId
+
+  title     String
+  message   String
+  tags      String[] // categories or tags like ["plumbing", "painting"]
+  createdAt DateTime  @default(now())
+  expiresAt DateTime? // optionally expire broadcast after some time
+
+  // Location or area fields (optional)
+  city  String?
+  state String?
+
+  isActive  Boolean   @default(true)
+  deletedAt DateTime?
+  createdBy String?
+  updatedBy String?
+  deletedBy String?
+}
+
+// Booking / Appointment between a customer and an enterprise
+model Booking {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  customer     User   @relation("CustomerBookings", fields: [customerId], references: [id])
+  customerId   String @db.ObjectId
+  enterprise   User   @relation("EnterpriseBookings", fields: [enterpriseId], references: [id])
+  enterpriseId String @db.ObjectId
+
+  // Booking details
+  status      BookingStatus @default(PENDING)
+  scheduledAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @default(now()) @updatedAt
+  canceledAt  DateTime?
+  remarks     String?
+  createdBy   String?
+  updatedBy   String?
+  deletedBy   String?
+  deletedAt   DateTime?
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  REJECTED
+}
+
+// Reviews / Ratings
+model Review {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  customer     User   @relation("ReviewsByCustomer", fields: [customerId], references: [id])
+  customerId   String @db.ObjectId
+  enterprise   User   @relation("ReviewsOfEnterprise", fields: [enterpriseId], references: [id])
+  enterpriseId String @db.ObjectId
+
+  rating    Int // 1 to 5
+  comment   String?
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedBy String?
+  deletedBy String?
+}
+
+// Optionally, you can have a relation among enterprises (for collaboration / partnerships)
+model EnterpriseRelation {
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  fromEnterprise User           @relation("EnterpriseRelationsFrom", fields: [fromId], references: [id])
+  fromId         String         @db.ObjectId
+  toEnterprise   User           @relation("EnterpriseRelationsTo", fields: [toId], references: [id])
+  toId           String         @db.ObjectId
+  status         RelationStatus @default(PENDING)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @default(now()) @updatedAt
+  createdBy      String?
+  updatedBy      String?
+  deletedBy      String?
+  deletedAt      DateTime?
+}
+
+enum RelationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
 }

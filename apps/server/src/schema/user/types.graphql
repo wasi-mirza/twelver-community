@@ -1,5 +1,13 @@
 scalar DateTime
 
+enum Role {
+  USER
+  ENTERPRISE
+  PENDING_ENTERPRISE
+  ADMIN
+  MODERATOR
+}
+
 # ------------------------
 # User Response Types
 # ------------------------
@@ -10,6 +18,8 @@ type User {
   lastName: String!
   email: String!
   firebaseId: String!
+  role: Role!
+  profile: Profile
 
   createdBy: String
   updatedBy: String

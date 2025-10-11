@@ -1,0 +1,7 @@
+extend type Query {
+  getReviewsForEnterprise(enterpriseId: String!): [Review!]
+}
+
+extend type Mutation {
+  createReview(input: CreateReviewInput!): Review
+}
