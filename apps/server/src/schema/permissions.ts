@@ -20,8 +20,6 @@ export const permissions = shield({
     getReviewsForEnterprise: isAuthenticated,
   },
   Mutation: {
-    // User
-    updateUserRole: and(isAuthenticated, isAdmin),
     // Profile
     createProfile: isAuthenticated,
     updateProfile: isAuthenticated,

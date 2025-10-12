@@ -19,40 +19,37 @@ export async function createProfile(
   userId: string,
   data: CreateProfileInput
 ): Promise<{ user: User; profile: Profile }> {
-  if (data.isEnterprise) {
-    // For enterprise users, we need a transaction to also update the user's role
-    return prisma.$transaction(async (tx) => {
-      const profile = await tx.profile.upsert({
-        where: { userId },
-        update: { ...data, enterpriseApplicationStatus: 'PENDING' },
-        create: {
-          ...data,
-          enterpriseApplicationStatus: 'PENDING',
-          user: { connect: { id: userId } },
-        },
-      });
+  // Determine the role based on the isEnterprise flag
+  const role = data.isEnterprise ? 'ENTERPRISE' : 'USER';
 
-      const user = await tx.user.update({
-        where: { id: userId },
-        data: { role: 'USER' },
-      });
-
-      return { user, profile };
+  return prisma.$transaction(async (tx) => {
+    // Update user's role
+    const user = await tx.user.update({
+      where: { id: userId },
+      data: { role },
     });
-  }
 
-  // For non-enterprise users, a simple upsert is sufficient
-  const profile = await prisma.profile.upsert({
-    where: { userId },
-    update: data,
-    create: {
+    // For enterprise users, set application status to PENDING
+    const profileData = {
       ...data,
-      user: { connect: { id: userId } },
-    },
-  });
+    };
 
-  const user = await prisma.user.findUnique({ where: { id: userId } });
-  return { user, profile };
+    // Create or update the profile
+    const profile = await tx.profile.upsert({
+      where: { userId },
+      update: {
+        ...profileData,
+        ...(data.isEnterprise ? { applicationStatus: 'PENDING' } : {}),
+      },
+      create: {
+        ...profileData,
+        ...(data.isEnterprise ? { applicationStatus: 'PENDING' } : {}),
+        user: { connect: { id: userId } },
+      },
+    });
+
+    return { user, profile };
+  });
 }
 
 export async function updateProfile(

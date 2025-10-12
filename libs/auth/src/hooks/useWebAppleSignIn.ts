@@ -1,11 +1,17 @@
 import { getAuth, OAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { useCallback } from 'react';
 import { useAuthProviderWeb } from '../lib/auth.web';
-import { useCreateUserMutation } from '@my-project/gql';
+import { Profile, useCreateUserMutation } from '@my-project/gql';
 import { splitName } from '@my-project/common-libs';
+import { User as DatabaseUser } from '@my-project/gql';
+
+type UserWithProfile = DatabaseUser & {
+  profile?: Profile | null;
+};
 
 const useWebAppleSignIn = () => {
-  const { logoutUser, setDatabaseUser } = useAuthProviderWeb();
+  const { logoutUser, setDatabaseUser, refetchDatabaseUser } =
+    useAuthProviderWeb();
   const [createUserMutation] = useCreateUserMutation();
 
   const appleSignIn = useCallback(async () => {
@@ -38,7 +44,7 @@ const useWebAppleSignIn = () => {
         
         // Store database user in auth context
         if (databaseUser) {
-          setDatabaseUser(databaseUser);
+          refetchDatabaseUser();
         }
       } catch (syncError) {
         console.error('Failed to sync user with database:', syncError);
@@ -50,7 +56,7 @@ const useWebAppleSignIn = () => {
       await signOut(auth).catch(() => {});
       throw error;
     }
-  }, [createUserMutation, setDatabaseUser]);
+  }, [createUserMutation, setDatabaseUser, refetchDatabaseUser]);
 
   const appleSignOut = useCallback(async () => {
     await logoutUser();

@@ -11,7 +11,8 @@ type UserWithProfile = DatabaseUser & {
 
 // This custom React hook provides Google Sign-In and Sign-Out functionality for a web app using Firebase Authentication.
 const useWebGoogleSignIn = () => {
-  const { logoutUser, setDatabaseUser } = useAuthProviderWeb();
+  const { logoutUser, setDatabaseUser, refetchDatabaseUser } =
+    useAuthProviderWeb();
   const [createUserMutation] = useCreateUserMutation();
 
   const googleSignIn = useCallback(async () => {
@@ -48,7 +49,7 @@ const useWebGoogleSignIn = () => {
         
         // Store database user in auth context
         if (databaseUser) {
-          setDatabaseUser(databaseUser as UserWithProfile);
+          refetchDatabaseUser();
         }
       } catch (syncError) {
         console.error('Failed to sync user with database:', syncError);
@@ -60,7 +61,7 @@ const useWebGoogleSignIn = () => {
       await signOut(auth).catch(() => {});
       throw error;
     }
-  }, [createUserMutation, setDatabaseUser]);
+  }, [createUserMutation, setDatabaseUser, refetchDatabaseUser]);
 
   const googleSignOut = useCallback(async () => {
     await logoutUser();

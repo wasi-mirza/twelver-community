@@ -1,6 +1,6 @@
 scalar JSONObject
 
-enum EnterpriseApplicationStatus {
+enum ApplicationStatus {
   PENDING
   APPROVED
   REJECTED
@@ -16,7 +16,7 @@ type Profile {
   state: String
   postalCode: String
   isEnterprise: Boolean!
-  enterpriseApplicationStatus: EnterpriseApplicationStatus
+  applicationStatus: ApplicationStatus
   tradeType: String
   companyName: String
   businessLicenseUrl: String

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useUpdateProfileMutation, Profile } from '@my-project/gql';
 import { useAuthProviderWeb } from '@my-project/auth';
+import { useNavigate } from 'react-router-dom';
 
 const EnterpriseRegistrationPage: React.FC = () => {
-  const { user, databaseUser, setDatabaseUser } = useAuthProviderWeb();
+  const { databaseUser, refetchDatabaseUser } = useAuthProviderWeb();
   const [updateProfile] = useUpdateProfileMutation();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     companyName: '',
     tradeType: '',
@@ -34,10 +36,10 @@ const EnterpriseRegistrationPage: React.FC = () => {
         },
       });
       if (data?.updateProfile) {
-        setDatabaseUser({
-          ...databaseUser,
-          profile: data.updateProfile as Profile,
-        });
+        const updatedUser = await refetchDatabaseUser();
+        if (updatedUser) {
+          navigate('/pending-approval', { replace: true });
+        }
       }
     } catch (error) {
       console.error('Failed to update profile:', error);

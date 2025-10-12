@@ -19,6 +19,7 @@ type WebAuthContextType = {
   logoutUser: () => Promise<void>;
   doNoting: () => Promise<void>;
   setDatabaseUser: (user: UserWithProfile | null) => void;
+  refetchDatabaseUser: () => Promise<UserWithProfile | null>;
 };
 
 // 1. Context Creation
@@ -31,7 +32,7 @@ const AuthProviderWeb = (props: React.PropsWithChildren<object>) => {
   const [user, setUser] = useState<FirebaseUserWeb | null>(null);
   const [databaseUser, setDatabaseUser] = useState<UserWithProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [getUserByFirebaseId] = useGetUserByFirebaseIdLazyQuery({
+  const [getUserByFirebaseId, { refetch }] = useGetUserByFirebaseIdLazyQuery({
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
       if (data.getUserByFirebaseId) {
@@ -73,13 +74,32 @@ const AuthProviderWeb = (props: React.PropsWithChildren<object>) => {
     setDatabaseUser(null);
   };
 
+  const refetchDatabaseUser = async () => {
+    if (user && refetch) {
+      const { data } = await refetch({ firebaseId: user.uid });
+      if (data && data.getUserByFirebaseId) {
+        setDatabaseUser(data.getUserByFirebaseId as UserWithProfile);
+        return data.getUserByFirebaseId as UserWithProfile;
+      }
+    }
+    return null;
+  };
+
   const doNoting = async () => {
     return;
   };
   // 5. Memoize the value for optimization
   // Prevents unnecessary re-renders by memoizing the context value.
   const value = useMemo(
-    () => ({ user, databaseUser, loading, logoutUser, doNoting, setDatabaseUser }),
+    () => ({
+      user,
+      databaseUser,
+      loading,
+      logoutUser,
+      doNoting,
+      setDatabaseUser,
+      refetchDatabaseUser,
+    }),
     [user, databaseUser, loading]
   );
 

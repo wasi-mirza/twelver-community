@@ -6,7 +6,6 @@ extend type Query {
 }
 
 extend type Mutation {
-  updateUserRole(id: ID!, role: Role!): User
   updateUser(input: UpdateUserInput!): User
   deleteUser(id: ID!): MutationResponse
 }

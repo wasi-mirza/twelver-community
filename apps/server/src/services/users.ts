@@ -11,6 +11,10 @@ export type UpdateUserInput = Partial<Omit<CreateUserInput, 'email'>> & {
 // splitName now imported from @my-project/common-libs
 
 export async function createUser(data: CreateUserInput): Promise<User> {
+  const existingUser = await getUserByEmail(data.email);
+  if (existingUser) {
+    return existingUser;
+  }
   return prisma.user.create({ data });
 }
 
@@ -35,20 +39,22 @@ export async function ensureUserFromFirebase(decoded: {
     throw new Error('Missing required fields from Firebase token (email/uid)');
   }
   const { firstName, lastName } = splitName(decoded.name);
-  const user = await getUserByEmail(decoded.email);
-  if (user) {
-    return user;
-  }
-  return createUser({
+  const user = await upsertUserByEmail({
     email: decoded.email,
     firebaseId: decoded.uid,
     firstName,
     lastName,
   });
+  return user;
 }
 
 export async function getUserByEmail(email: string): Promise<User | null> {
-  return prisma.user.findUnique({ where: { email } });
+  return prisma.user.findUnique({ 
+    where: { email } ,
+    include: {
+      profile: true,
+    },
+  });
 }
 
 export async function getUserByFirebaseId(firebaseId: string): Promise<User | null> {
@@ -67,10 +73,6 @@ export async function getUsers(): Promise<User[]> {
 export async function updateUser(input: UpdateUserInput): Promise<User> {
   const { id, ...data } = input;
   return prisma.user.update({ where: { id }, data });
-}
-
-export async function updateUserRole(id: string, role: Role): Promise<User> {
-  return prisma.user.update({ where: { id }, data: { role } });
 }
 
 export async function deleteUser(id: string): Promise<User> {

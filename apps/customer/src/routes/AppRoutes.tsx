@@ -9,15 +9,8 @@ import DashboardPage from '../pages/DashboardPage';
 
 const AppRoutes: React.FC = () => {
   const { user, databaseUser, loading } = useAuthProviderWeb();
-  
 
   if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  // If the user is authenticated but we don't have their data yet, show loading.
-  // This is a fallback for when the firebase user is loaded but the database user is not.
-  if (user && !databaseUser) {
     return <div>Loading...</div>;
   }
 
@@ -30,56 +23,49 @@ const AppRoutes: React.FC = () => {
     );
   }
 
-  // If the user's enterprise application status is PENDING, but the profile hasn't loaded,
-  // we can't determine the next step, so we show a loading indicator.
-  if (
-    databaseUser?.profile?.enterpriseApplicationStatus === 'PENDING' &&
-    !databaseUser.profile
-  ) {
+  // If the user is authenticated, but we don't have their data yet, show loading.
+  if (!databaseUser) {
     return <div>Loading...</div>;
   }
 
-  // User has selected enterprise, but not completed registration
-  if (
-    databaseUser?.role === 'USER' &&
-    databaseUser?.profile?.enterpriseApplicationStatus === 'PENDING' &&
-    !databaseUser.profile?.companyName
-  ) {
-    return (
-      <Routes>
-        <Route
-          path="/register-enterprise"
-          element={<EnterpriseRegistrationPage />}
-        />
-        <Route
-          path="*"
-          element={<Navigate to="/register-enterprise" replace />}
-        />
-      </Routes>
-    );
-  }
-
-  // User has registered as enterprise and is awaiting approval
-  if (databaseUser?.profile?.enterpriseApplicationStatus === 'PENDING') {
-    return (
-      <Routes>
-        <Route path="/pending-approval" element={<PendingApprovalPage />} />
-        <Route
-          path="*"
-          element={<Navigate to="/pending-approval" replace />}
-        />
-      </Routes>
-    );
-  }
-
   // User is authenticated, but has not selected a role yet
-  if (!databaseUser?.profile) {
+  if (!databaseUser.profile) {
     return (
       <Routes>
         <Route path="/select-role" element={<RoleSelectionPage />} />
         <Route path="*" element={<Navigate to="/select-role" replace />} />
       </Routes>
     );
+  }
+
+  if (databaseUser.role === 'ENTERPRISE') {
+    if (databaseUser.profile.applicationStatus === 'PENDING') {
+      // User has selected enterprise, but not completed registration
+      if (!databaseUser.profile.companyName) {
+        return (
+          <Routes>
+            <Route
+              path="/register-enterprise"
+              element={<EnterpriseRegistrationPage />}
+            />
+            <Route
+              path="*"
+              element={<Navigate to="/register-enterprise" replace />}
+            />
+          </Routes>
+        );
+      }
+      // User has registered as enterprise and is awaiting approval
+      return (
+        <Routes>
+          <Route path="/pending-approval" element={<PendingApprovalPage />} />
+          <Route
+            path="*"
+            element={<Navigate to="/pending-approval" replace />}
+          />
+        </Routes>
+      );
+    }
   }
 
   // User is fully registered and approved

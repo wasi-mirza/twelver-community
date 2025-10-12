@@ -61,7 +61,7 @@ query getUserByFirebaseId($firebaseId: String!) {
       state
       postalCode
       isEnterprise
-      enterpriseApplicationStatus
+      applicationStatus
       tradeType
       companyName
       businessLicenseUrl
@@ -90,7 +90,7 @@ query getUserByEmail($email: String!) {
       state
       postalCode
       isEnterprise
-      enterpriseApplicationStatus
+      applicationStatus
       tradeType
       companyName
       businessLicenseUrl

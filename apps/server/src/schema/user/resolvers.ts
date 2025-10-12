@@ -5,7 +5,6 @@ import {
   getUserByFirebaseId,
   getUserByEmail,
   getUsers,
-  updateUserRole,
 } from '../../services/users';
 
 export default {
@@ -17,7 +16,6 @@ export default {
       getUserByFirebaseId(firebaseId),
   },
   Mutation: {
-    updateUserRole: async (_, { id, role }) => updateUserRole(id, role),
     updateUser: async (_, { input }) => updateUser(input),
     deleteUser: async (_, { id }) => deleteUser(id),
   },

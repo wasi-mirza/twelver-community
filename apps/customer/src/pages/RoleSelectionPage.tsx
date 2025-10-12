@@ -4,7 +4,8 @@ import { useAuthProviderWeb } from '@my-project/auth';
 import { useNavigate } from 'react-router-dom';
 
 const RoleSelectionPage: React.FC = () => {
-  const { databaseUser, setDatabaseUser } = useAuthProviderWeb();
+  const { databaseUser, setDatabaseUser, refetchDatabaseUser } =
+    useAuthProviderWeb();
   const [createProfile] = useCreateProfileMutation();
   const navigate = useNavigate();
 
@@ -20,15 +21,12 @@ const RoleSelectionPage: React.FC = () => {
         },
       });
       if (data?.createProfile) {
-        // Refresh the user data from auth context to get the new role
-        setDatabaseUser({
-          ...databaseUser,
-          role: data.createProfile.user.role,
-          profile: data.createProfile.profile as Profile,
-        });
-        navigate(isEnterprise ? '/register-enterprise' : '/dashboard', {
-          replace: true,
-        });
+        const updatedUser = await refetchDatabaseUser();
+        if (updatedUser) {
+          navigate(isEnterprise ? '/register-enterprise' : '/dashboard', {
+            replace: true,
+          });
+        }
       }
     } catch (error) {
       console.error('Failed to create profile:', error);
