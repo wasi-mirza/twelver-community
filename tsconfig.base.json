@@ -20,7 +20,6 @@
       "@my-project/common-libs": ["libs/common-libs/src/index.ts"],
       "@my-project/gql": ["libs/gql/src/index.ts"],
       "@my-project/libs": ["libs/src/index.ts"],
-      "@my-project/mobile-ui": ["libs/mobile-ui/src/index.ts"],
       "@my-project/web-ui": ["libs/web-ui/src/index.ts"]
     }
   },

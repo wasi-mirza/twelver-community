@@ -1,6 +1,9 @@
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import { theme } from '@my-project/web-ui';
+
 import App from './app/app';
 import { ApolloProvider } from '@apollo/client';
 import { client } from '@my-project/apollo';
@@ -30,11 +33,14 @@ const apolloClient = client({
 root.render(
   <StrictMode>
     <ApolloProvider client={apolloClient}>
-      <AuthProviderWeb>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </AuthProviderWeb>
+      <BrowserRouter>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <AuthProviderWeb>
+            <App />
+          </AuthProviderWeb>
+        </ThemeProvider>
+      </BrowserRouter>
     </ApolloProvider>
   </StrictMode>
 );

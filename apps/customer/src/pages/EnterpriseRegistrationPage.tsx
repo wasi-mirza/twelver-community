@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
-import { useUpdateProfileMutation, Profile } from '@my-project/gql';
+import { useUpdateProfileMutation } from '@my-project/gql';
 import { useAuthProviderWeb } from '@my-project/auth';
 import { useNavigate } from 'react-router-dom';
+import {
+  Container,
+  Card,
+  Typography,
+  Button,
+  Box,
+  Grid,
+  TextField,
+} from '@mui/material';
 
 const EnterpriseRegistrationPage: React.FC = () => {
   const { databaseUser, refetchDatabaseUser } = useAuthProviderWeb();
@@ -18,7 +27,9 @@ const EnterpriseRegistrationPage: React.FC = () => {
     description: '',
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -36,10 +47,8 @@ const EnterpriseRegistrationPage: React.FC = () => {
         },
       });
       if (data?.updateProfile) {
-        const updatedUser = await refetchDatabaseUser();
-        if (updatedUser) {
-          navigate('/pending-approval', { replace: true });
-        }
+        await refetchDatabaseUser();
+        navigate('/pending-approval', { replace: true });
       }
     } catch (error) {
       console.error('Failed to update profile:', error);
@@ -47,20 +56,110 @@ const EnterpriseRegistrationPage: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Enterprise Registration</h1>
-      <form onSubmit={handleSubmit}>
-        <input name="companyName" placeholder="Company Name" onChange={handleChange} />
-        <input name="tradeType" placeholder="Trade Type (e.g., Plumber)" onChange={handleChange} />
-        <input name="phone" placeholder="Phone" onChange={handleChange} />
-        <input name="address" placeholder="Address" onChange={handleChange} />
-        <input name="city" placeholder="City" onChange={handleChange} />
-        <input name="state" placeholder="State" onChange={handleChange} />
-        <input name="postalCode" placeholder="Postal Code" onChange={handleChange} />
-        <textarea name="description" placeholder="Description of services" onChange={handleChange} />
-        <button type="submit">Submit for Approval</button>
-      </form>
-    </div>
+    <Container
+      component="main"
+      maxWidth="md"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        py: 4,
+      }}
+    >
+      <Card sx={{ padding: 4 }}>
+        <Typography component="h1" variant="h5" align="center" sx={{ mb: 2 }}>
+          Enterprise Registration
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                name="companyName"
+                required
+                fullWidth
+                label="Company Name"
+                onChange={handleChange}
+                autoFocus
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                name="tradeType"
+                required
+                fullWidth
+                label="Trade Type (e.g., Plumber)"
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                name="phone"
+                required
+                fullWidth
+                label="Phone"
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                name="address"
+                required
+                fullWidth
+                label="Address"
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                name="city"
+                required
+                fullWidth
+                label="City"
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                name="state"
+                required
+                fullWidth
+                label="State"
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                name="postalCode"
+                required
+                fullWidth
+                label="Postal Code"
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                name="description"
+                required
+                fullWidth
+                label="Description of services"
+                multiline
+                rows={4}
+                onChange={handleChange}
+              />
+            </Grid>
+          </Grid>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Submit for Approval
+          </Button>
+        </Box>
+      </Card>
+    </Container>
   );
 };
 
