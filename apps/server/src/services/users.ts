@@ -1,24 +1,17 @@
-import { CreateUserInput } from '@my-project/gql';
-import { PrismaClient, User, Role } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
 import { splitName } from '@my-project/common-libs';
+import { UpdateUserInput } from '@my-project/gql';
 
 const prisma = new PrismaClient();
 
-export type UpdateUserInput = Partial<Omit<CreateUserInput, 'email'>> & {
-  id: string;
+type UpsertUserByEmailInput = {
+  email: string;
+  firstName: string;
+  lastName: string;
+  firebaseId: string;
 };
 
-// splitName now imported from @my-project/common-libs
-
-export async function createUser(data: CreateUserInput): Promise<User> {
-  const existingUser = await getUserByEmail(data.email);
-  if (existingUser) {
-    return existingUser;
-  }
-  return prisma.user.create({ data });
-}
-
-export async function upsertUserByEmail(data: CreateUserInput): Promise<User> {
+export async function upsertUserByEmail(data: UpsertUserByEmailInput): Promise<User> {
   return prisma.user.upsert({
     where: { email: data.email },
     update: {
@@ -72,7 +65,7 @@ export async function getUsers(): Promise<User[]> {
 
 export async function updateUser(input: UpdateUserInput): Promise<User> {
   const { id, ...data } = input;
-  return prisma.user.update({ where: { id }, data });
+  return prisma.user.update({ where: { id }, data: data as UpsertUserByEmailInput });
 }
 
 export async function deleteUser(id: string): Promise<User> {

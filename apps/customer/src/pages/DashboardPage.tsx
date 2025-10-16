@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAuthProviderWeb } from '@my-project/auth';
+import { useAuth } from '@my-project/auth';
 import {
   AppBar,
   Toolbar,
@@ -11,14 +11,17 @@ import {
 } from '@mui/material';
 
 const DashboardPage: React.FC = () => {
-  const { databaseUser, logoutUser } = useAuthProviderWeb();
+  const { databaseUser, logoutUser } = useAuth();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Welcome, {databaseUser?.firstName}
+            Dashboard
+          </Typography>
+          <Typography sx={{ mr: 2 }}>
+            Welcome, {databaseUser?.firstName} ({databaseUser?.role})
           </Typography>
           <Button color="inherit" onClick={logoutUser}>
             Logout

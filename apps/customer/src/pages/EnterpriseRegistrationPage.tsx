@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useUpdateProfileMutation } from '@my-project/gql';
-import { useAuthProviderWeb } from '@my-project/auth';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@my-project/auth';
+import { useUpdateProfileMutation } from '@my-project/gql';
 import {
   Container,
   Card,
@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 
 const EnterpriseRegistrationPage: React.FC = () => {
-  const { databaseUser, refetchDatabaseUser } = useAuthProviderWeb();
+  const { databaseUser, refetchDatabaseUser } = useAuth();
   const [updateProfile] = useUpdateProfileMutation();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({

@@ -1,4 +1,4 @@
-export * from './lib/initFirebaseAmplify';
 export * from './lib/auth.web';
-export * from './hooks/useWebGoogleSignIn';
-export * from './hooks/useWebAppleSignIn';
+export * from './lib/auth.admin';
+export * from './lib/use-auth';
+export * from './lib/initFirebaseAmplify';

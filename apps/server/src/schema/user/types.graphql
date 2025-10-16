@@ -4,7 +4,7 @@ enum Role {
   USER
   ENTERPRISE
   ADMIN
-  MODERATOR
+  SUPER_ADMIN
 }
 
 # ------------------------
@@ -32,17 +32,12 @@ type User {
 # User Input Types
 # ------------------------
 
-input CreateUserInput {
-  firstName: String!
-  lastName: String!
-  email: String!
-  firebaseId: String!
-}
-
 input UpdateUserInput {
+  id: String!
+  firebaseId: String
   firstName: String
   lastName: String
-  firebaseId: String
+  role: Role
 }
 
 type MutationResponse {

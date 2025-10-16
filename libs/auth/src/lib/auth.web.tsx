@@ -1,5 +1,14 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { getAuth, onAuthStateChanged, signOut, User as FirebaseUserWeb } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  User as FirebaseUserWeb,
+} from 'firebase/auth';
 import {
   Profile,
   Role,
@@ -17,6 +26,9 @@ type WebAuthContextType = {
   databaseUser: UserWithProfile | null;
   loading: boolean;
   logoutUser: () => Promise<void>;
+  signUpWithEmail: (email: string, password: string) => Promise<FirebaseUserWeb | null>;
+  signInWithEmail: (email: string, password: string) => Promise<FirebaseUserWeb | null>;
+  signInWithGoogle: () => Promise<FirebaseUserWeb | null>;
   doNoting: () => Promise<void>;
   setDatabaseUser: (user: UserWithProfile | null) => void;
   refetchDatabaseUser: () => Promise<UserWithProfile | null>;
@@ -74,6 +86,40 @@ const AuthProviderWeb = (props: React.PropsWithChildren<object>) => {
     setDatabaseUser(null);
   };
 
+  const signUpWithEmail = async (email: string, password: string) => {
+    try {
+      const auth = getAuth();
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      return userCredential.user;
+    } catch (error) {
+      console.error('Error signing up with email and password', error);
+      return null;
+    }
+  };
+
+  const signInWithEmail = async (email: string, password: string) => {
+    try {
+      const auth = getAuth();
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      return userCredential.user;
+    } catch (error) {
+      console.error('Error signing in with email and password', error);
+      return null;
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    try {
+      const auth = getAuth();
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      return result.user;
+    } catch (error) {
+      console.error('Error signing in with Google', error);
+      return null;
+    }
+  };
+
   const refetchDatabaseUser = async () => {
     if (user && refetch) {
       const { data } = await refetch({ firebaseId: user.uid });
@@ -96,6 +142,9 @@ const AuthProviderWeb = (props: React.PropsWithChildren<object>) => {
       databaseUser,
       loading,
       logoutUser,
+      signUpWithEmail,
+      signInWithEmail,
+      signInWithGoogle,
       doNoting,
       setDatabaseUser,
       refetchDatabaseUser,

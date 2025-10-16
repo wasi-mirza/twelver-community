@@ -2,8 +2,26 @@
 # User Mutations
 # ------------------------
 
-mutation createUser($input: CreateUserInput!) {
-  createUser(input: $input) {
+mutation updateUser($data: UpdateUserInput!) {
+  updateUser(data: $data) {
+    id
+    firebaseId
+    firstName
+    lastName
+    email
+    updatedAt
+  }
+}
+
+mutation deleteUser($id: String!) {
+  deleteUser(id: $id) {
+    status
+    message
+  }
+}
+
+mutation ensureUser {
+  ensureUser {
     id
     firstName
     lastName
@@ -20,27 +38,37 @@ mutation createUser($input: CreateUserInput!) {
   }
 }
 
-mutation updateUser($input: UpdateUserInput!) {
-  updateUser(input: $input) {
-    id
-    firebaseId
-    firstName
-    lastName
-    email
-    updatedAt
-  }
-}
-
-mutation deleteUser($id: ID!) {
-  deleteUser(id: $id) {
-    status
-    message
-  }
-}
-
 # ------------------------
 # User Queries
 # ------------------------
+
+query getUsers {
+  getUsers {
+    id
+    firstName
+    lastName
+    email
+    role
+    profile {
+      id
+      companyName
+      phone
+      address
+      city
+      state
+      postalCode
+      isEnterprise
+      applicationStatus
+      tradeType
+      businessLicenseUrl
+      description
+      otherDetails
+    }
+    createdAt
+    updatedAt
+    deletedAt
+  }
+}
 
 query getUserByFirebaseId($firebaseId: String!) {
   getUserByFirebaseId(firebaseId: $firebaseId) {
@@ -73,6 +101,35 @@ query getUserByFirebaseId($firebaseId: String!) {
 
 query getUserByEmail($email: String!) {
   getUserByEmail(email: $email) {
+    id
+    firebaseId
+    createdAt
+    updatedAt
+    deletedAt
+    firstName
+    lastName
+    email
+    role
+    profile {
+      id
+      phone
+      address
+      city
+      state
+      postalCode
+      isEnterprise
+      applicationStatus
+      tradeType
+      companyName
+      businessLicenseUrl
+      description
+      otherDetails
+    }
+  }
+}
+
+query me {
+  me {
     id
     firebaseId
     createdAt

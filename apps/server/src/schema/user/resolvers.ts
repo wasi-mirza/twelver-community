@@ -1,10 +1,11 @@
-
+import { UpdateUserInput } from '@my-project/gql';
 import {
-  updateUser,
   deleteUser,
-  getUserByFirebaseId,
   getUserByEmail,
+  getUserByFirebaseId,
   getUsers,
+  updateUser,
+  ensureUserFromFirebase,
 } from '../../services/users';
 
 export default {
@@ -16,7 +17,22 @@ export default {
       getUserByFirebaseId(firebaseId),
   },
   Mutation: {
-    updateUser: async (_, { input }) => updateUser(input),
-    deleteUser: async (_, { id }) => deleteUser(id),
+    updateUser: (_, { data }: { data: UpdateUserInput }) => {
+      return updateUser(data);
+    },
+    deleteUser: async (_, { id }: { id: string }) => {
+      await deleteUser(id);
+      return {
+        status: true,
+        message: 'User deleted successfully',
+      };
+    },
+    ensureUser: async (_, __, { user }: { user: any }) => {
+      // The user object is added to the context by the verifyFirebaseToken middleware
+      if (!user) {
+        throw new Error('Not authenticated');
+      }
+      return ensureUserFromFirebase(user);
+    },
   },
 };

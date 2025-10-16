@@ -1,7 +1,10 @@
-import React from 'react';
-import { useCreateProfileMutation } from '@my-project/gql';
-import { useAuthProviderWeb } from '@my-project/auth';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@my-project/auth';
+import {
+  useCreateProfileMutation,
+  Role,
+} from '@my-project/gql';
 import {
   Container,
   Card,
@@ -12,7 +15,10 @@ import {
 } from '@mui/material';
 
 const RoleSelectionPage: React.FC = () => {
-  const { databaseUser, refetchDatabaseUser } = useAuthProviderWeb();
+  const { databaseUser, refetchDatabaseUser } = useAuth();
+  const [selectedRole, setSelectedRole] = useState<'USER' | 'ENTERPRISE' | ''>(
+    ''
+  );
   const [createProfile] = useCreateProfileMutation();
   const navigate = useNavigate();
 

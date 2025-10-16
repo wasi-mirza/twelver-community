@@ -42,7 +42,7 @@ enum Role {
   USER // individual / customer by default
   ENTERPRISE // approved enterprise
   ADMIN
-  MODERATOR
+  SUPER_ADMIN
 }
 
 enum ApplicationStatus {

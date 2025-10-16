@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAuthProviderWeb } from '@my-project/auth';
+import { useAuth } from '@my-project/auth';
 import {
   Container,
   Card,
@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 
 const PendingApprovalPage: React.FC = () => {
-  const { logoutUser } = useAuthProviderWeb();
+  const { logoutUser } = useAuth();
   return (
     <Container
       component="main"

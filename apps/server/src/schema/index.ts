@@ -1,4 +1,4 @@
-import userSchema, { publicUserSchema } from './user';
+import userSchema from './user';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { flatten, merge } from 'lodash';
 import profileSchema from './profile';
@@ -24,7 +24,7 @@ const executableSchema = makeExecutableSchema({
 
 export default applyMiddleware(executableSchema, permissions);
 
-const publicSchemaParts = [publicUserSchema, profileSchema];
+const publicSchemaParts = [userSchema, profileSchema];
 
 export const publicSchema = makeExecutableSchema({
   typeDefs: [baseTypeDefs, ...flatten(publicSchemaParts.map((it) => it.typeDefs))],

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuthProviderWeb } from '@my-project/auth';
+import { useAuth } from '@my-project/auth';
 import LoginPage from '../pages/LoginPage';
 import RoleSelectionPage from '../pages/RoleSelectionPage';
 import EnterpriseRegistrationPage from '../pages/EnterpriseRegistrationPage';
@@ -8,7 +8,7 @@ import PendingApprovalPage from '../pages/PendingApprovalPage';
 import DashboardPage from '../pages/DashboardPage';
 
 const AppRoutes: React.FC = () => {
-  const { user, databaseUser, loading } = useAuthProviderWeb();
+  const { user, databaseUser, loading } = useAuth();
 
   if (loading) {
     return <div>Loading...</div>;
